@@ -1,56 +1,37 @@
-# Welcome to your Expo app 👋
+# SmartStorage IoT — Control de Acceso Seguro y Monitoreo Ambiental
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Sistema IoT orientado a almacenes industriales e insumos críticos para prevenir accesos no autorizados y monitorear condiciones ambientales (temperatura y humedad) en tiempo real, integrando un microcontrolador **ESP32**, **Firebase Realtime Database** y una aplicación móvil en **React Native / Expo**.
 
-## Get started
+## Problemática Resuelta
+En bodegas e instalaciones de almacenamiento de insumos sensibles (como componentes electrónicos, piezas metálicas o sustancias críticas) existen dos riesgos principales:
+- **Seguridad y control de accesos:** Falta de validación inmediata y bitácora automática ante intentos de ingreso no autorizados.
+- **Riesgos ambientales:** Variaciones de temperatura o humedad que pueden degradar, oxidar o comprometer el inventario sin notificación oportuna.
 
-1. Install dependencies
+## Arquitectura del Sistema
+1. **Capa de Hardware / Edge (ESP32):** Lee el sensor **DHT11**, valida credenciales mediante el lector **RFID MFRC522**, acciona el **servomotor** de la puerta y emite señales auditivas diferenciadas con el **buzzer** (1 pitido corto para acceso concedido; doble pitido de advertencia para acceso denegado).
+2. **Capa de Nube (Firebase Realtime Database):** Almacena y sincroniza en tiempo real los registros de clima y eventos de acceso (`CONCEDIDO` / `DENEGADO`).
+3. **Capa Móvil (React Native + Expo Router + TypeScript):** Muestra la pantalla de bienvenida (`index.tsx`), la navegación (`_layout.tsx`) y el panel técnico en vivo (`dashboard.tsx`) con KPIs, alerta térmica (> 28 °C), filtros e historial.
 
-   ```bash
-   npm install
-   ```
+## Mapa de Conexiones (ESP32)
+| Componente | Pin / Interfaz ESP32 | Función |
+| :--- | :--- | :--- |
+| **RFID MFRC522 (SDA / SS)** | GPIO 5 (SPI) | Selección de esclavo SPI |
+| **RFID MFRC522 (RST)** | GPIO 22 | Reset del lector RFID |
+| **Sensor DHT11** | GPIO 21 | Lectura de temperatura y humedad |
+| **Servomotor (Puerta)** | GPIO 4 | Apertura y cierre de compuerta |
+| **Buzzer Activo** | GPIO 15 | Retroalimentación auditiva de acceso |
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
+## Estructura del Repositorio
+```text
+├── firmware/               # Código del ESP32 (PlatformIO / C++)
+│   └── main.cpp
+├── src/
+│   └── app/
+│       ├── _layout.tsx     # Configuración de navegación (Stack)
+│       ├── index.tsx       # Pantalla de bienvenida
+│       └── dashboard.tsx   # Panel de control en tiempo real
+├── firebaseConfig.ts       # Configuración de Firebase Realtime Database
+└── package.json            # Dependencias de Expo / React Nativeopers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
