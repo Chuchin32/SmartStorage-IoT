@@ -35,3 +35,14 @@ En bodegas e instalaciones de almacenamiento de insumos sensibles (como componen
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+Ejecución de la Aplicación Móvil
+Instala las dependencias:
+
+Bash
+npm install
+Inicia el servidor de desarrollo de Expo:
+
+Bash
+npx expo start -c
+Escanea el código QR desde Expo Go en tu dispositivo móvil (asegurándote de tener conexión a internet y el ESP32 enviando datos a Firebase).
